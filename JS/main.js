@@ -67,20 +67,20 @@ function displaySite(arr){
                 <td>${i+1}</td>
                 <td>${arr[i].code}</td>
                 <td>                            
-                <a href="${link}" target="_blank" class="btn btn-outline-primary">
+                <a href="${link}" target="_blank" class="btn btn-outline-primary btn-sm">
                     <i class="fa-solid fa-eye pe-2"></i>Visit
                 </a>
 
                 </td>
                 
                 <td>
-                    <button onclick="setForUpdate(${i})" class="btn btn-outline-warning">
+                    <button onclick="setForUpdate(${i})" class="btn btn-outline-warning btn-sm">
                     <i class="fa-regular fa-pen-to-square pe-2"></i>Update
                     </button>
                 </td>
 
                 <td>
-                    <button onclick="deleteSite(${i})" class="btn btn-outline-danger">
+                    <button onclick="deleteSite(${i})" class="btn btn-outline-danger btn-sm">
                         <i class="fa-solid fa-trash-can pe-2"></i>Delete
                     </button>
                 </td>
@@ -166,7 +166,7 @@ function validateInputs(element){
 
 
     var regex = {
-        siteName : /^\w{3,}(\s+\w+)*$/,
+        siteName : /^\w{3,}(\s+\w+)*\s?$/,
         siteUrl : /^(https?:\/\/)?(www\.)?[\w\-]+(\.[\w\-]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?$/,      
     }
 
