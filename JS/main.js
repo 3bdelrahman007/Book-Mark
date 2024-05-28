@@ -1,48 +1,86 @@
-var siteName = document.getElementById("site-name");
-var siteUrl = document.getElementById("site-url");
+var siteName = document.getElementById("siteName");
+var siteUrl = document.getElementById("siteUrl");
 var searchInput = document.getElementById("search");
+var addBtn = document.getElementById("addBtn");
+var updateBtn = document.getElementById("updateBtn");
+var updatedIndex;
 
 
 var siteContainer = [];
 
 if(localStorage.getItem("site")!== null){
     siteContainer = JSON.parse(localStorage.getItem("site"))
-    displaySite()
+    displaySite(siteContainer)
 }
 
-function addSite(){
+function addSite() {
+    var inputs = [siteName, siteUrl];
+    var isValid = true;
 
-    var site = {
-        code : siteName.value
+    inputs.forEach(function(input) {
+        validateInputs(input);
+        if (!input.classList.contains("is-valid")) {
+            isValid = false;
+        }
+    });
+
+    if (isValid) {
+        var site = {
+            code: siteName.value,
+            web: siteUrl.value,
+        }
+
+        siteContainer.push(site);
+        localStorage.setItem("site", JSON.stringify(siteContainer));
+        clearForm();
+        displaySite(siteContainer);
+
+        inputs.forEach(function(input) {
+            input.classList.remove("is-valid");
+        });
     }
-
-    siteContainer.push(site)
-    localStorage.setItem("site",JSON.stringify(siteContainer))
-    clearForm()
-    displaySite()
-    console.log(siteContainer);
 }
+
 
 function clearForm(){
     siteName.value = null;
     siteUrl.value = null;
 }
 
-function displaySite(){
+
+
+function displaySite(arr){
+
+    
     var siteBox = ``
 
-    for (let i = 0; i < siteContainer.length; i++) {
+    for (let i = 0; i < arr.length; i++) {
+
+        var link = arr[i].web;
+        if (!link.startsWith("http://") && !link.startsWith("https://")) {
+            link = "http://" + link;
+        }
+
+
         siteBox += `
             <tr>
                 <td>${i+1}</td>
-                <td>${siteContainer[i].code}</td>
+                <td>${arr[i].code}</td>
                 <td>                            
-                    <button class="btn btn-outline-primary">
-                        <i class="fa-solid fa-eye pe-2"></i>Visit
+                <a href="${link}" target="_blank" class="btn btn-outline-primary">
+                    <i class="fa-solid fa-eye pe-2"></i>Visit
+                </a>
+
+                </td>
+                
+                <td>
+                    <button onclick="setForUpdate(${i})" class="btn btn-outline-warning">
+                    <i class="fa-regular fa-pen-to-square pe-2"></i>Update
                     </button>
                 </td>
+
                 <td>
-                    <button onclick="deleteSite(${i})" class="btn btn-outline-dark">
+                    <button onclick="deleteSite(${i})" class="btn btn-outline-danger">
                         <i class="fa-solid fa-trash-can pe-2"></i>Delete
                     </button>
                 </td>
@@ -51,43 +89,100 @@ function displaySite(){
     document.getElementById("table-content").innerHTML = siteBox
 }
 
+function visitSite(url) {
+    window.location.href = url;
+}
+
 function deleteSite(deletedIndex){
     siteContainer.splice(deletedIndex,1);
     localStorage.setItem("site",JSON.stringify(siteContainer));
-    displaySite();
-    console.log(siteContainer);
+    displaySite(siteContainer);
 }
 
 function search(){
     var term = searchInput.value;
-    var siteBox = ``;
+    var searchSite = [];
+
     for (let i = 0; i < siteContainer.length; i++) {
         if(siteContainer[i].code.toLowerCase().includes(term.toLowerCase())){
-            siteBox += `
-            <tr>
-                <td>${i+1}</td>
-                <td>${siteContainer[i].code}</td>
-                <td>                            
-                    <button class="btn btn-visit btn-outline-primary">
-                        <i class="fa-solid fa-eye pe-2"></i>Visit
-                    </button>
-                </td>
-                <td>
-                    <button onclick="deleteSite(${i})" class="btn btn-outline-dark">
-                        <i class="fa-solid fa-trash-can pe-2"></i>Delete
-                    </button>
-                </td>
-            </tr>`;
+
+            searchSite.push(siteContainer[i])
         }
         
     }
-    document.getElementById("table-content").innerHTML = siteBox;
+    displaySite(searchSite)
 }
 
 
 
+function setForUpdate(i){
+
+    updatedIndex = i;
+
+    addBtn.classList.add("d-none");
+    updateBtn.classList.remove("d-none");
+
+    siteName.value = siteContainer[i].code;
+    siteUrl.value = siteContainer[i].web;
+}
 
 
+function update() {
+    var updatedName = siteName.value;
+    var updatedUrl = siteUrl.value;
+
+    if (!isValidInput(updatedName, updatedUrl)) {
+        return; 
+    }
+
+    addBtn.classList.remove("d-none");
+    updateBtn.classList.add("d-none");
+
+    siteContainer[updatedIndex].code = updatedName;
+    siteContainer[updatedIndex].web = updatedUrl;
+
+    localStorage.setItem("site", JSON.stringify(siteContainer));
+    displaySite(siteContainer);
+    clearForm();
+
+    siteName.classList.remove("is-valid", "is-invalid");
+    siteUrl.classList.remove("is-valid", "is-invalid");
+}
+
+function isValidInput(name, url) {
+    if (!/^[\w\s]{3,}$/.test(name)) {
+        return false;
+    }
+
+    if (!/^(https?:\/\/)?(www\.)?[\w\-]+(\.[\w\-]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?$/.test(url)) {
+        return false;
+    }
+
+    return true;
+}
 
 
+function validateInputs(element){
+
+
+    var regex = {
+        siteName : /^\w{3,}(\s+\w+)*$/,
+        siteUrl : /^(https?:\/\/)?(www\.)?[\w\-]+(\.[\w\-]+)+([\w\-\.,@?^=%&:/~\+#]*[\w\-\@?^=%&/~\+#])?$/,      
+    }
+
+    
+
+    if(regex[element.id].test(element.value) == true ){
+        
+        element.classList.add("is-valid");
+        element.classList.remove("is-invalid");
+        element.nextElementSibling.classList.replace("d-block", "d-none")
+
+    } else{
+        element.classList.remove("is-valid");
+        element.classList.add("is-invalid");
+        element.nextElementSibling.classList.replace("d-none", "d-block")
+    }
+    
+}
 
