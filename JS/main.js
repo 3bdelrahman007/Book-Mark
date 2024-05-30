@@ -68,20 +68,20 @@ function displaySite(arr){
                 <td>${arr[i].code}</td>
                 <td>                            
                 <a href="${link}" target="_blank" class="btn btn-outline-primary btn-sm">
-                    <i class="fa-solid fa-eye pe-2"></i>Visit
+                    <i class="fa-solid fa-eye pe-sm-2 pe-0"></i>Visit
                 </a>
 
                 </td>
                 
                 <td>
                     <button onclick="setForUpdate(${i})" class="btn btn-outline-warning btn-sm">
-                    <i class="fa-regular fa-pen-to-square pe-2"></i>Update
+                    <i class="fa-regular fa-pen-to-square pe-sm-2 pe-0"></i>Update
                     </button>
                 </td>
 
                 <td>
                     <button onclick="deleteSite(${i})" class="btn btn-outline-danger btn-sm">
-                        <i class="fa-solid fa-trash-can pe-2"></i>Delete
+                        <i class="fa-solid fa-trash-can pe-sm-2 pe-0"></i>Delete
                     </button>
                 </td>
             </tr>`;

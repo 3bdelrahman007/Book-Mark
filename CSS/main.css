@@ -37,3 +37,15 @@ section .header {
     border-color: black;
     border-style: dotted;
 }
+
+.table>thead {
+    vertical-align: middle;
+}
+
+td {
+    vertical-align: middle;
+}
+
+/* .table>:not(caption)>*>* {
+    background-color: #3ca55c;
+} */
