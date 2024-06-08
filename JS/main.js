@@ -55,6 +55,7 @@ function displaySite(arr){
     var siteBox = ``
 
     for (let i = 0; i < arr.length; i++) {
+        var originalIndex = siteContainer.indexOf(arr[i])
 
         var link = arr[i].web;
         if (!link.startsWith("http://") && !link.startsWith("https://")) {
@@ -74,13 +75,13 @@ function displaySite(arr){
                 </td>
                 
                 <td>
-                    <button onclick="setForUpdate(${i})" class="btn btn-outline-warning btn-sm">
+                    <button onclick="setForUpdate(${originalIndex})" class="btn btn-outline-warning btn-sm">
                     <i class="fa-regular fa-pen-to-square pe-sm-2 pe-0"></i>Update
                     </button>
                 </td>
 
                 <td>
-                    <button onclick="deleteSite(${i})" class="btn btn-outline-danger btn-sm">
+                    <button onclick="deleteSite(${originalIndex})" class="btn btn-outline-danger btn-sm">
                         <i class="fa-solid fa-trash-can pe-sm-2 pe-0"></i>Delete
                     </button>
                 </td>
